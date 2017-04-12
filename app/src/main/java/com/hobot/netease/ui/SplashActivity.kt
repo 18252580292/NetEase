@@ -4,7 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import com.google.gson.Gson
 import com.hobot.netease.R
+import com.hobot.netease.bean.Ads
 import com.hobot.netease.constant.HttpConstants
 import com.hobot.netease.http.OkhttpUtils
 import okhttp3.Call
@@ -30,6 +32,9 @@ class SplashActivity : Activity() {
 
             override fun onResponse(call: Call?, response: Response?) {
                 Log.e("tag", response.toString())
+                var gson:Gson = Gson()
+                val ads = gson.fromJson<Ads>(response?.body()?.string(), Ads::class.java)
+                println(ads.toString())
             }
 
         })
