@@ -1,10 +1,12 @@
 package com.hobot.netease.ui
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import com.google.gson.Gson
+import com.hobot.netease.ImageCacheService
 import com.hobot.netease.R
 import com.hobot.netease.bean.Ads
 import com.hobot.netease.constant.HttpConstants
@@ -33,8 +35,10 @@ class SplashActivity : Activity() {
             override fun onResponse(call: Call?, response: Response?) {
                 Log.e("tag", response.toString())
                 var gson:Gson = Gson()
-                val ads = gson.fromJson<Ads>(response?.body()?.string(), Ads::class.java)
-                println(ads.toString())
+                val ads:Ads = gson.fromJson<Ads>(response?.body()?.string(), Ads::class.java)
+                var intent:Intent = Intent(this@SplashActivity, ImageCacheService::class.java)
+                intent.putExtra("ads", ads)
+                startService(intent)
             }
 
         })
