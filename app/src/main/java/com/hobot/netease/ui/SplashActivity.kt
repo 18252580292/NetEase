@@ -11,6 +11,7 @@ import com.hobot.netease.R
 import com.hobot.netease.bean.Ads
 import com.hobot.netease.constant.HttpConstants
 import com.hobot.netease.http.OkhttpUtils
+import com.hobot.netease.util.LogUtils
 import okhttp3.Call
 import okhttp3.Response
 import java.io.IOException
@@ -29,7 +30,7 @@ class SplashActivity : Activity() {
     private fun initData() {
         OkhttpUtils.get(HttpConstants.BASE_URL, object : OkhttpUtils.HttpCallback {
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("tag", "haha,error", e)
+                LogUtils.e("failed", e as Exception, this@SplashActivity.javaClass.simpleName)
             }
 
             override fun onResponse(call: Call?, response: Response?) {

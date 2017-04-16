@@ -1,6 +1,5 @@
-package com.hobot.netease
+package com.hobot.netease.util
 
-import android.util.Base64
 import java.nio.charset.Charset
 import java.security.MessageDigest
 
@@ -11,8 +10,7 @@ class Md5Utils {
     companion object {
         public fun md5Encode(str: String): String {
             val digest = MessageDigest.getInstance("MD5")
-            return Base64.encodeToString(digest.digest(str.toByteArray(Charset.forName("UTF-8"))),
-                    Base64.DEFAULT)
+            return String(digest.digest(str.toByteArray(Charset.forName("UTF-8"))))
         }
     }
 }
