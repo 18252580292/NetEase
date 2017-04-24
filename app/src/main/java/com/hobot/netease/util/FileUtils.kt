@@ -23,5 +23,16 @@ class FileUtils {
                 }
             }
         }
+
+        /**
+         * 根据文件的路径判断文件是否已经存在
+         */
+        fun fileExists(filePath:String): Boolean {
+            var file = File(filePath)
+            if(file.exists()) {
+                return true
+            }
+            return false
+        }
     }
 }

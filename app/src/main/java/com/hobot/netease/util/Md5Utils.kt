@@ -1,6 +1,5 @@
 package com.hobot.netease.util
 
-import java.nio.charset.Charset
 import java.security.MessageDigest
 
 /**
@@ -8,9 +7,17 @@ import java.security.MessageDigest
  */
 class Md5Utils {
     companion object {
+        /**
+         * 将字符串进行MD5加密
+         */
         public fun md5Encode(str: String): String {
+            var builder: StringBuilder = StringBuilder()
             val digest = MessageDigest.getInstance("MD5")
-            return String(digest.digest(str.toByteArray(Charset.forName("UTF-8"))))
+            var bytes = digest.digest(str.toByteArray())
+            bytes.forEach {
+                builder.append(Integer.toHexString(it.toInt() and 0xff or 0x100).substring(1, 3))
+            }
+            return builder.toString()
         }
     }
 }

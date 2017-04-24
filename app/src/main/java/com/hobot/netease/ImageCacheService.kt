@@ -10,6 +10,7 @@ import com.hobot.netease.util.FileUtils
 import com.hobot.netease.util.LogUtils
 import com.hobot.netease.util.Md5Utils
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.net.URL
 
@@ -23,8 +24,14 @@ class ImageCacheService : IntentService("image_cache") {
         var adsDetails: List<AdsDetail> = ads.ads
         adsDetails.forEach {
             var imgName: String = it.res_url[0]
-            LogUtils.d(imgName)
-            downloadImg(imgName)
+            if(!isCachedImg(imgName)) {
+                LogUtils.d("don't cache this img")
+                LogUtils.d(imgName)
+                downloadImg(imgName)
+            } else {
+                LogUtils.d("already cache this img")
+            }
+
         }
     }
 
@@ -43,16 +50,33 @@ class ImageCacheService : IntentService("image_cache") {
      */
     private fun save2SDcard(imgName: String, bitmap: Bitmap?) {
         var resName: String = Md5Utils.md5Encode(imgName)
-        var file: File = File(FileUtils.IMG_CACHE_DIR + resName + ".img")
+        var file: File = File(FileUtils.IMG_CACHE_DIR + resName + ".jpg")
         if (file.exists()) {
             return
         }
         file.parentFile.mkdirs()
-        var out:FileOutputStream = FileOutputStream(file)
+        var out: FileOutputStream = FileOutputStream(file)
         LogUtils.d(file.absolutePath)
         bitmap?.compress(Bitmap.CompressFormat.JPEG, 60, out)
         out.flush()
         out.close()
+    }
+
+    /**
+     * 根据图片的名称判断图片是否已经缓存
+     */
+    private fun isCachedImg(imgName: String): Boolean {
+        var resName = Md5Utils.md5Encode(imgName)
+        var file = File(FileUtils.IMG_CACHE_DIR + resName + ".jpg")
+        if (file.exists()) {
+            var bitmap = BitmapFactory.decodeStream(FileInputStream(file))
+            if(bitmap != null) {
+                bitmap.recycle()
+                return true
+            }
+            return false
+        }
+        return false
     }
 
 }
