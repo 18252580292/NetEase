@@ -19,6 +19,7 @@ import com.hobot.netease.http.OkhttpUtils
 import com.hobot.netease.util.FileUtils
 import com.hobot.netease.util.LogUtils
 import com.hobot.netease.util.SharedPrefUtils
+import com.hobot.netease.wrapper.HttpManager
 import kotlinx.android.synthetic.main.activity_splash.*
 import okhttp3.Call
 import okhttp3.Response
