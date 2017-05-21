@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
@@ -33,7 +34,7 @@ import okhttp3.Response;
  * Created by cui on 17-5-7.
  */
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends Activity implements View.OnClickListener {
     private static final String TAG = HomeActivity.class.getSimpleName();
     private static final int MSG_LOAD_IMG = 0x00;
     private static final int MSG_ENTER_HOME = 0x01;
@@ -53,6 +54,7 @@ public class HomeActivity extends Activity {
         mBgImg = (ImageView) findViewById(R.id.img_bg);
         handlerMsg();
         isReCacheImg();
+        mBgImg.setOnClickListener(this);
     }
 
     private void handlerMsg() {
@@ -74,6 +76,9 @@ public class HomeActivity extends Activity {
         }
     }
 
+    /**
+     * load splash background
+     */
     private void loadImgBg() {
         File imgFiles = new File(FileUtils.Companion.getIMG_CACHE_DIR());
         if (imgFiles.isFile()) {
@@ -154,9 +159,14 @@ public class HomeActivity extends Activity {
         });
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
+
     static class MyHandler extends Handler {
-        WeakReference<Activity> atyRf;
-        Message msg ;
+        private WeakReference<Activity> atyRf;
+        private Message msg ;
         public MyHandler(Activity activity) {
             atyRf = new WeakReference<Activity>(activity);
         }
