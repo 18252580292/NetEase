@@ -46,6 +46,8 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     private final String SPLASH_NEXT_REQ = "splash_next_req";
     private MyHandler mHandler;
     private ImageView mBgImg;
+    private Ads ads;
+    private int tempIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +82,19 @@ public class HomeActivity extends Activity implements View.OnClickListener {
      * load splash background
      */
     private void loadImgBg() {
+
         File imgFiles = new File(FileUtils.Companion.getIMG_CACHE_DIR());
         if (imgFiles.isFile()) {
             throw new IllegalArgumentException();
         }
         imgFiles.mkdirs();
+        String cacheJson = SharedPrefUtils.Companion.getString(HomeActivity.this, SPLASH_JSON_CACHE);
+        if (!TextUtils.isEmpty(cacheJson)) {
+            LogUtils.Companion.d(cacheJson, TAG);
+            Gson gson = new Gson();
+            String result = cacheJson;
+            ads = gson.fromJson(result, Ads.class);
+        }
         File[] files = imgFiles.listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
@@ -98,7 +108,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         }
         //random load img
         Random random = new Random();
-        int tempIndex = random.nextInt(files.length);
+        tempIndex = random.nextInt(files.length);
         mBgImg.setImageBitmap(BitmapFactory.decodeFile(files[tempIndex].getAbsolutePath()));
 
         //enter home interface
@@ -116,7 +126,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
             LogUtils.Companion.d(cacheJson, TAG);
             Gson gson = new Gson();
             String result = cacheJson;
-            Ads ads = gson.fromJson(result, Ads.class);
+            ads = gson.fromJson(result, Ads.class);
             Message msg = Message.obtain();
             msg.obj = ads;
             msg.what = MSG_START_SERVICE_CACHE_IMG;
@@ -143,7 +153,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
                     LogUtils.Companion.d("request data success", TAG);
                     Gson gson = new Gson();
                     String result = response.body().string();
-                    Ads ads = gson.fromJson(result, Ads.class);
+                    ads = gson.fromJson(result, Ads.class);
                     Message msg = Message.obtain();
                     msg.obj = ads;
                     msg.what = MSG_START_SERVICE_CACHE_IMG;
@@ -161,12 +171,15 @@ public class HomeActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("detail_url", ads.getAds().get(tempIndex).getAction_params().getLink_url());
+        startActivity(intent);
     }
 
     static class MyHandler extends Handler {
         private WeakReference<Activity> atyRf;
-        private Message msg ;
+        private Message msg;
+
         public MyHandler(Activity activity) {
             atyRf = new WeakReference<Activity>(activity);
         }

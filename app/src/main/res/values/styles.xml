@@ -1,6 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
+    <style name="test" parent="Theme.AppCompat.Light.NoActionBar"></style>
     <style name="AppTheme" parent="android:Theme.Holo.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
